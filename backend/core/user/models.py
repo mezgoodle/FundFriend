@@ -60,6 +60,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+    bio = models.TextField(null=True)
+    avatar = models.ImageField(null=True)
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
