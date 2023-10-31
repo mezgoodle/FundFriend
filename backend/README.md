@@ -6,6 +6,12 @@
 pip install -r requirements.txt
 ```
 
+## Create app
+
+```bash
+django-admin startapp backend
+```
+
 ## Run the server
 
 ```bash
