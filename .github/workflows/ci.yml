@@ -34,13 +34,13 @@ jobs:
       - name: Lint Code
         run: |
           ruff .
-        on_error: continue
+        continue-on-error: true
       - name: Run Tests
         run: |
           coverage run --source=python manage.py test
-        on_error: continue
+        continue-on-error: true
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        on_error: continue
+        continue-on-error: true
