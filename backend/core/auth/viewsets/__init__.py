@@ -1,3 +1,5 @@
-from .login import LoginViewSet  # noqa F401
-from .refresh import RefreshViewSet  # noqa F401
-from .register import RegisterViewSet  # noqa F401
+# flake8: noqa
+
+from .login import LoginViewSet
+from .refresh import RefreshViewSet
+from .register import RegisterViewSet

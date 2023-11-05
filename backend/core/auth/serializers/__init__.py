@@ -1,2 +1,4 @@
-from .login import LoginSerializer  # noqa F401
-from .register import RegisterSerializer  # noqa F401
+# flake8: noqa
+
+from .login import LoginSerializer
+from .register import RegisterSerializer
