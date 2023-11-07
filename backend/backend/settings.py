@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "core.user.apps.UserConfig",
     "core.auth.apps.AuthConfig",
+    "core.bank.apps.BankConfig",
 ]
 
 MIDDLEWARE = [
