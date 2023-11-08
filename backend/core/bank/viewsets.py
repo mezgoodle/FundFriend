@@ -3,13 +3,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from core.abstract.viewsets import AbstractViewSet
+from core.auth.permissions import UserPermission
 from core.bank.models import Bank
 from core.bank.serializers import BankSerializer
 
 
 class BankViewSet(AbstractViewSet):
-    http_method_names = ("get", "post")
-    permission_classes = (IsAuthenticated,)
+    http_method_names = ("get", "post", "put", "delete")
+    permission_classes = (UserPermission,)
     serializer_class = BankSerializer
 
     def get_queryset(self):

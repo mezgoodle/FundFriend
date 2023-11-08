@@ -12,6 +12,11 @@ class BankSerializer(AbstractSerializer):
         queryset=User.objects.all(), slug_field="public_id"
     )
 
+    def update(self, instance, validated_data):
+        if not instance.edited:
+            validated_data["edited"] = True
+        return super().update(instance, validated_data)
+
     def validate_author(self, value):
         if self.context["request"].user != value:
             raise ValidationError("You can't edit this bank")
