@@ -35,15 +35,15 @@ jobs:
 
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
       - name: Zip artifact for deployment
-        run: zip release.zip ./fundfriend/* -r
+        run: zip fundfriend/release.zip ./fundfriend/* -r
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
           name: python-app
           path: |
-            release.zip
-            !venv/
+            fundfriend/release.zip
+            !fundfriend/venv/
 
   deploy:
     runs-on: ubuntu-latest
