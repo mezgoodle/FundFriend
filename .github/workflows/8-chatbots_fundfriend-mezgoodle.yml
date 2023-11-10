@@ -45,7 +45,7 @@ jobs:
           name: python-app
           path: |
             ./fundfriend/release.zip
-            !venv/
+            ./fundfriend/!venv/
 
   deploy:
     runs-on: ubuntu-latest
