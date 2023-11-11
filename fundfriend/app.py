@@ -76,9 +76,13 @@ async def messages(req: Request) -> Response:
     return Response(status=201)
 
 
+async def hello(req: Request) -> Response:
+    return json_response(data={"message": "Hello World!"}, status=200)
+
+
 def init_func(argv):
     APP = web.Application(middlewares=[aiohttp_error_middleware])
-    APP.router.add_get("/hello", "Hello World")
+    APP.router.add_get("/hello", hello)
     APP.router.add_post("/api/messages", messages)
     return APP
 
