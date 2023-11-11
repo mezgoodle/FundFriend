@@ -67,4 +67,4 @@ jobs:
         with:
           app-name: "fundfriend-mezgoodle"
           slot-name: "Production"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0164010114524FDC9AC4E2B7647C7FB6 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E58CD0B895A4238B08B45B342D2888A }}
