@@ -11,9 +11,9 @@ This sample **requires** prerequisites in order to run.
 ### Install Python 3.6
 
 ## Running the sample
+
 - Run `pip install -r requirements.txt` to install all dependencies
 - Run `python app.py`
-
 
 ## Testing the bot using Bot Framework Emulator
 
@@ -25,7 +25,6 @@ This sample **requires** prerequisites in order to run.
 
 - Launch Bot Framework Emulator
 - Enter a Bot URL of `http://localhost:3978/api/messages`
-
 
 ## Further reading
 
@@ -40,3 +39,7 @@ This sample **requires** prerequisites in order to run.
 - [Azure Portal](https://portal.azure.com)
 - [Language Understanding using LUIS](https://docs.microsoft.com/azure/cognitive-services/luis/)
 - [Channels and Bot Connector Service](https://docs.microsoft.com/azure/bot-service/bot-concepts?view=azure-bot-service-4.0)
+
+## Postman
+
+- [Documentation](https://documenter.getpostman.com/view/22575161/2s9YXk41Vq)
