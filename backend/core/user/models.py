@@ -53,11 +53,23 @@ class User(AbstractBaseUser, PermissionsMixin, AbstractModel):
 
     bio = models.TextField(null=True)
     avatar = models.ImageField(null=True)
+    banks_liked = models.ManyToManyField(
+        "core_bank.Bank", related_name="liked_by"
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
     objects = UserManager()
+
+    def like(self, bank):
+        return self.banks_liked.add(bank)
+
+    def remove_like(self, bank):
+        return self.banks_liked.remove(bank)
+    
+    def has_liked(self, bank):
+        return self.banks_liked.filter(pk=bank.pk).exists()
 
     def __str__(self):
         return self.email
