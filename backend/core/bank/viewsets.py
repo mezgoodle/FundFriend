@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from core.abstract.viewsets import AbstractViewSet
@@ -12,6 +12,26 @@ class BankViewSet(AbstractViewSet):
     http_method_names = ("get", "post", "put", "delete")
     permission_classes = (UserPermission,)
     serializer_class = BankSerializer
+
+    @action(methods=["post"], detail=True)
+    def like(self, request, *args, **kwargs):
+        bank = self.get_object()
+        user = self.request.user
+
+        user.like(bank)
+
+        serializer = self.serializer_class(bank)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=["post"], detail=True)
+    def remove_like(self, request, *args, **kwargs):
+        bank = self.get_object()
+        user = self.request.user
+
+        user.remove_like(bank)
+
+        serializer = self.serializer_class(bank)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_queryset(self):
         return Bank.objects.all()
