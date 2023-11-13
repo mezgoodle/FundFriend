@@ -8,8 +8,10 @@ stateDiagram-v2
     Profile/Settings --> DB_on_Backend
     Profile/Settings --> Role
     Role --> Customer
-    Role --> Bankir
-    Bankir --> Bank_Documents
+    Role --> Banker
+    Banker --> Bank_Documents
+    Banker --> Chatbot
+    Banker --> User_Documents
     Bank_Documents --> Code_base_on_Azure
     Customer --> Chatbot
     Customer--> User_Documents
