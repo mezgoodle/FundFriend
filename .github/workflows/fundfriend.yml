@@ -1,0 +1,70 @@
+name: Build and deploy Python app to Azure Web App
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./fundfriend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.11"
+
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with ruff
+        run: ruff .
+
+      - name: Zip artifact for deployment
+        run: zip ./release.zip ./* -r
+
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-app
+          path: |
+            ./fundfriend/release.zip
+            ./fundfriend/!venv/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push'
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: python-app
+
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        id: deploy-to-webapp
+        with:
+          app-name: "fundfriend-mezgoodle"
+          slot-name: "Production"
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E58CD0B895A4238B08B45B342D2888A }}
