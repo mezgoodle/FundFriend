@@ -1,22 +1,14 @@
-import uuid
-
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
     PermissionsMixin,
 )
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.http import Http404
+
+from core.abstract.models import AbstractManager, AbstractModel
 
 
-class UserManager(BaseUserManager):
-    def get_object_by_public_id(self, public_id):
-        try:
-            return self.get(public_id=public_id)
-        except (ObjectDoesNotExist, ValueError, TypeError):
-            raise Http404
-
+class UserManager(BaseUserManager, AbstractManager):
     def create_user(self, username, email, password=None, **kwargs):
         if email is None:
             raise ValueError("Users must have an email address")
@@ -47,26 +39,33 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    public_id = models.UUIDField(
-        db_index=True, unique=True, default=uuid.uuid4, editable=False
-    )
+class User(AbstractBaseUser, PermissionsMixin, AbstractModel):
     username = models.CharField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
 
     bio = models.TextField(null=True)
     avatar = models.ImageField(null=True)
+    banks_liked = models.ManyToManyField(
+        "core_bank.Bank", related_name="liked_by"
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
     objects = UserManager()
+
+    def like(self, bank):
+        return self.banks_liked.add(bank)
+
+    def remove_like(self, bank):
+        return self.banks_liked.remove(bank)
+
+    def has_liked(self, bank):
+        return self.banks_liked.filter(pk=bank.pk).exists()
 
     def __str__(self):
         return self.email

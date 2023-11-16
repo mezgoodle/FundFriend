@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "core.user.apps.UserConfig",
     "core.auth.apps.AuthConfig",
+    "core.bank.apps.BankConfig",
+    "core.document.apps.DocumentConfig",
 ]
 
 MIDDLEWARE = [
@@ -138,5 +140,9 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend"
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 15,
 }
