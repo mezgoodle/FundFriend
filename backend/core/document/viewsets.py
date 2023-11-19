@@ -8,7 +8,7 @@ from core.document.serializers import DocumentSerializer
 
 
 class DocumentViewSet(AbstractViewSet):
-    http_method_names = ("get", "post", "put", "delete")
+    http_method_names = ("get", "post", "put", "delete", "patch")
     permission_classes = (UserPermission,)
     serializer_class = DocumentSerializer
 
