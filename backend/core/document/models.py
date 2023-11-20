@@ -12,7 +12,7 @@ class Document(AbstractModel):
     text = models.TextField()
     author = models.ForeignKey(to="core_user.User", on_delete=models.CASCADE)
     bank = models.ForeignKey(
-        to="core_bank.Bank", on_delete=models.SET_NULL, null=True
+        to="core_bank.Bank", on_delete=models.SET_NULL, null=True, blank=True
     )
     edited = models.BooleanField(default=False)
 
