@@ -19,7 +19,7 @@ class Document(AbstractModel):
     objects = DocumentManager()
 
     def __str__(self):
-        return self.text
+        return self.title
 
     class Meta:
         db_table = "core.document"
