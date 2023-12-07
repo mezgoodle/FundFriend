@@ -6,15 +6,17 @@ class UserPermission(BasePermission):
         if request.user.is_anonymous:
             return request.method in SAFE_METHODS
 
-        if view.basename in ["bank", "document"]:
+        if view.basename in ["bank", "bank-documents"]:
+            if request.method in ["DELETE", "PUT", "PATCH"]:
+                return bool(
+                    request.user == obj.author or request.user.is_superuser
+                )
             return bool(request.user and request.user.is_authenticated)
-
         return False
 
     def has_permission(self, request, view):
-        if view.basename in ["bank", "document"]:
+        if view.basename in ["bank", "bank-documents"]:
             if request.user.is_anonymous:
                 return request.method in SAFE_METHODS
             return bool(request.user and request.user.is_authenticated)
-
         return False
