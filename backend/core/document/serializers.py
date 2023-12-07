@@ -27,6 +27,11 @@ class DocumentSerializer(AbstractSerializer):
             validated_data["edited"] = True
         return super().update(instance, validated_data)
 
+    def validate_bank(self, value):
+        if self.instance:
+            return self.instance.bank
+        return value
+
     def validate_author(self, value):
         if self.context["request"].user != value:
             raise ValidationError("You can't edit this document")
