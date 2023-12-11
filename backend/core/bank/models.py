@@ -15,7 +15,7 @@ class Bank(AbstractModel):
     objects = BankManager()
 
     def __str__(self):
-        return self.author.full_name
+        return self.description[:20]
 
     class Meta:
         db_table = "core.bank"

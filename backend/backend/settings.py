@@ -32,7 +32,7 @@ environ.Env.read_env(BASE_DIR / ".env")
 SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", default=True)
 
 ALLOWED_HOSTS = []
 
@@ -99,6 +99,11 @@ DATABASES = {
         "PORT": env("DATABASE_PORT"),
     }
 }
+
+if DEBUG:
+    DATABASES["default"]["NAME"] = env("TEST_DATABASE_NAME")
+    DATABASES["default"]["PASSWORD"] = env("TEST_DATABASE_PASSWORD")
+    DATABASES["default"]["HOST"] = env("TEST_DATABASE_HOST")
 
 
 # Password validation
