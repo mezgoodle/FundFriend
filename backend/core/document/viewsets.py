@@ -1,3 +1,4 @@
+from django.http.response import Http404
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -13,7 +14,11 @@ class DocumentViewSet(AbstractViewSet):
     serializer_class = DocumentSerializer
 
     def get_queryset(self):
-        return Document.objects.all()
+        if self.request.user.is_superuser:
+            return Document.objects.all()
+        if not (bank_pk := self.kwargs.get("bank_pk")):
+            return Http404
+        return Document.objects.filter(bank__public_id=bank_pk)
 
     def get_object(self):
         obj = Document.objects.get_object_by_public_id(self.kwargs["pk"])
