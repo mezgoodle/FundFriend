@@ -33,5 +33,10 @@ jobs:
           # Replace the test command with the appropriate one for Next.js
           # Example: npm test
           # You might need to adjust this command based on your testing setup
-          npm test
+          npm run test:coverage
+        continue-on-error: true
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true

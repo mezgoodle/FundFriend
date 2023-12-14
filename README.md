@@ -1,5 +1,7 @@
 # FundFriend
 
+[![codecov](https://codecov.io/gh/mezgoodle/FundFriend/graph/badge.svg?token=6t72TDeS24)](https://codecov.io/gh/mezgoodle/FundFriend)
+
 ```mermaid
 stateDiagram-v2
     [*] --> Site
