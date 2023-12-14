@@ -1,7 +1,7 @@
 import React from "react";
 
-const page = ({ params: { documentId } }) => {
-  return <div>{documentId}</div>;
+const DocumentDynamicPage = ({ params }) => {
+  return <div data-testid="root">{params.documentId}</div>;
 };
 
-export default page;
+export default DocumentDynamicPage;

@@ -1,7 +1,7 @@
 import React from "react";
 
-const page = () => {
-  return <div>Chat page</div>;
+const ChatPage = () => {
+  return <div data-testid="root">Chat page</div>;
 };
 
-export default page;
+export default ChatPage;

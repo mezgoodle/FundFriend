@@ -1,3 +1,3 @@
 export default function Home() {
-  return <div>Index page</div>;
+  return <div data-testid="root">Index page</div>;
 }
