@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use lts Node.js
+      - name: Use the lts version Node.js
         uses: actions/setup-node@v2
         with:
           node-version: lts/*
@@ -23,20 +23,11 @@ jobs:
         run: npm ci
       - name: Lint Code
         run: |
-          # Replace the linting command with the appropriate one for Next.js
-          # Example: eslint . 
-          # You might need to adjust this command based on your linting setup
           npm run lint
-        continue-on-error: true
       - name: Run Tests
         run: |
-          # Replace the test command with the appropriate one for Next.js
-          # Example: npm test
-          # You might need to adjust this command based on your testing setup
           npm run test:coverage
-        continue-on-error: true
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        continue-on-error: true
