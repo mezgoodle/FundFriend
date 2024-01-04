@@ -43,9 +43,6 @@ jobs:
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-          TEST_DATABASE_NAME: ${{ secrets.TEST_DATABASE_NAME }}
-          TEST_DATABASE_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
-          TEST_DATABASE_HOST: ${{ secrets.TEST_DATABASE_HOST }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
