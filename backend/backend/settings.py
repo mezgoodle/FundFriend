@@ -100,11 +100,6 @@ DATABASES = {
     }
 }
 
-if DEBUG:
-    DATABASES["default"]["NAME"] = env("TEST_DATABASE_NAME")
-    DATABASES["default"]["PASSWORD"] = env("TEST_DATABASE_PASSWORD")
-    DATABASES["default"]["HOST"] = env("TEST_DATABASE_HOST")
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
