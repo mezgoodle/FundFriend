@@ -1,6 +1,7 @@
 # FundFriend
 
 [![codecov](https://codecov.io/gh/mezgoodle/FundFriend/graph/badge.svg?token=6t72TDeS24)](https://codecov.io/gh/mezgoodle/FundFriend)
+[![wakatime](https://wakatime.com/badge/user/13631fc5-0ee5-4aed-920d-b02dc1546d51/project/018b812c-f504-4813-900d-fc64320b8527.svg)](https://wakatime.com/badge/user/13631fc5-0ee5-4aed-920d-b02dc1546d51/project/018b812c-f504-4813-900d-fc64320b8527)
 
 ```mermaid
 stateDiagram-v2
