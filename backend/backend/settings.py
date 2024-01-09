@@ -34,7 +34,7 @@ SECRET_KEY = get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["backend-dev22.eu-central-1.elasticbeanstalk.com"]
 
 
 # Application definition
