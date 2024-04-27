@@ -1,50 +1,78 @@
-name: Test and deploy backend
+# name: Test and deploy backend
+
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["main"]
+
+# jobs:
+#   backend:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./backend
+
+#     strategy:
+#       max-parallel: 4
+#       matrix:
+#         # python-version: [3.8, 3.9, 3.11]
+#         python-version: [3.11]
+
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Set up Python ${{ matrix.python-version }}
+#         uses: actions/setup-python@v3
+#         with:
+#           python-version: ${{ matrix.python-version }}
+#       - name: Install Dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+#       - name: Lint Code
+#         run: |
+#           ruff .
+#         continue-on-error: true
+#       - name: Run Tests
+#         run: |
+#           pytest --cov=./ --cov-report=xml
+#         continue-on-error: true
+#         env:
+#           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+#           DATABASE_USER: ${{ secrets.DATABASE_USER }}
+#           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+#           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+#           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+#       - name: Upload coverage reports to Codecov
+#         uses: codecov/codecov-action@v3
+#         env:
+#           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+#         continue-on-error: true
+
+name: Deploy Django to Cloud Run
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
     branches: ["main"]
 
 jobs:
-  backend:
+  build-and-deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend
-
-    strategy:
-      max-parallel: 4
-      matrix:
-        # python-version: [3.8, 3.9, 3.11]
-        python-version: [3.11]
+        working-directory: ./backend1
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Lint Code
-        run: |
-          ruff .
-        continue-on-error: true
-      - name: Run Tests
-        run: |
-          pytest --cov=./ --cov-report=xml
-        continue-on-error: true
-        env:
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        continue-on-error: true
+      - uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t gcr.io/black-media-417713/fundfriend .
+
+      - name: Push Docker image to Google Cloud Container Registry
+        run: docker push gcr.io/black-media-417713/fundfriend
+
+      - name: Deploy to Cloud Run
+        run: gcloud run deploy SERVICE_NAME --image gcr.io/black-media-417713/fundfriend --platform managed
