@@ -76,10 +76,15 @@ jobs:
           project_id: black-media-417713
           install_components: "gke-gcloud-auth-plugin"
 
+      - name: Authenticate to Google Cloud
+        run: gcloud auth activate-service-account --key-file=${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - name: Configure Docker to use the gcloud command-line tool as a credential helper
+        run: gcloud auth configure-docker europe-west3-docker.pkg.dev
+
       - name: build and push the docker image
         env:
           GOOGLE_PROJECT: black-media-417713
         run: |
-          gcloud auth configure-docker europe-west3-docker.pkg.dev
           docker build -t europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest .
           docker push europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
