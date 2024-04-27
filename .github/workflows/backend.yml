@@ -49,38 +49,38 @@
 #           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 #         continue-on-error: true
 
-name: Deploy Django to Cloud Run
+# name: Deploy Django to Cloud Run
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches: ["main"]
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches: ["main"]
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend1
-    env:
-      IMAGE_NAME: gcr.io/black-media-417713/fundfriend
-      PROJECT_ID: black-media-417713
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./backend
+#     env:
+#       IMAGE_NAME: gcr.io/black-media-417713/fundfriend
+#       PROJECT_ID: black-media-417713
 
-    steps:
-      - uses: actions/checkout@v2
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}" # Replace with the name of your GitHub Actions secret
+#       - name: Authenticate to Google Cloud
+#         uses: google-github-actions/auth@v2
+#         with:
+#           credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}" # Replace with the name of your GitHub Actions secret
 
-      - name: Build Docker image
-        run: docker build -t $IMAGE_NAME .
+#       - name: Build Docker image
+#         run: docker build -t $IMAGE_NAME .
 
-      - name: Push Docker image to Google Cloud Container Registry
-        run: docker push $IMAGE_NAME
+#       - name: Push Docker image to Google Cloud Container Registry
+#         run: docker push $IMAGE_NAME
 
-      - name: Deploy to Cloud Run
-        run: gcloud run deploy fundfriend --image $IMAGE_NAME --platform managed
+#       - name: Deploy to Cloud Run
+#         run: gcloud run deploy fundfriend --image $IMAGE_NAME --platform managed
