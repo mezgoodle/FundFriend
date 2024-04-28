@@ -93,6 +93,6 @@ jobs:
       - name: Deploy to Cloud Run
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
-          service: fundfriendbackend
+          service: fundfriednd
           region: europe-west3
           image: europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
