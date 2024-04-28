@@ -78,21 +78,24 @@ jobs:
 
       - uses: "google-github-actions/auth@v2"
         with:
-          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}" # Replace with the name of your GitHub Actions secret
+          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
 
-      - name: Configure Docker to use the gcloud command-line tool as a credential helper
-        run: gcloud auth configure-docker europe-west3-docker.pkg.dev
+      - name: Get authenticated service account
+        run: gcloud auth list --filter=status:ACTIVE --format="value(account)"
 
-      - name: build and push the docker image
-        env:
-          GOOGLE_PROJECT: black-media-417713
-        run: |
-          docker build -t europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest .
-          docker push europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
+      # - name: Configure Docker to use the gcloud command-line tool as a credential helper
+      #   run: gcloud auth configure-docker europe-west3-docker.pkg.dev
 
-      - name: Deploy to Cloud Run
-        uses: "google-github-actions/deploy-cloudrun@v2"
-        with:
-          service: fundfriednd
-          region: europe-west3
-          image: europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
+      # - name: build and push the docker image
+      #   env:
+      #     GOOGLE_PROJECT: black-media-417713
+      #   run: |
+      #     docker build -t europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest .
+      #     docker push europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
+
+      # - name: Deploy to Cloud Run
+      #   uses: "google-github-actions/deploy-cloudrun@v2"
+      #   with:
+      #     service: fundfriednd
+      #     region: europe-west3
+      #     image: europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
