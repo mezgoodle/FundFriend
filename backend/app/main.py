@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
@@ -18,11 +18,21 @@ def get_db():
         db.close()
 
 
-@app.post("/users/", response_model=schemas.User)
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+
+@app.post(
+    "/users/", response_model=schemas.User, status_code=status.HTTP_201_CREATED
+)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered",
+        )
     return crud.create_user(db=db, user=user)
 
 
@@ -40,7 +50,11 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@app.post("/users/{user_id}/items/", response_model=schemas.Item)
+@app.post(
+    "/users/{user_id}/items/",
+    response_model=schemas.Item,
+    status_code=status.HTTP_201_CREATED,
+)
 def create_item_for_user(
     user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
 ):
