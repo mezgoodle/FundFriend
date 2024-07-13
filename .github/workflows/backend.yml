@@ -1,101 +1,44 @@
-# name: Test and deploy backend
-
-# on:
-#   push:
-#     branches: ["main"]
-#   pull_request:
-#     branches: ["main"]
-
-# jobs:
-#   backend:
-#     runs-on: ubuntu-latest
-#     defaults:
-#       run:
-#         working-directory: ./backend
-
-#     strategy:
-#       max-parallel: 4
-#       matrix:
-#         # python-version: [3.8, 3.9, 3.11]
-#         python-version: [3.11]
-
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Set up Python ${{ matrix.python-version }}
-#         uses: actions/setup-python@v3
-#         with:
-#           python-version: ${{ matrix.python-version }}
-#       - name: Install Dependencies
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install -r requirements.txt
-#       - name: Lint Code
-#         run: |
-#           ruff .
-#         continue-on-error: true
-#       - name: Run Tests
-#         run: |
-#           pytest --cov=./ --cov-report=xml
-#         continue-on-error: true
-#         env:
-#           DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-#           DATABASE_USER: ${{ secrets.DATABASE_USER }}
-#           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-#           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-#           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-#       - name: Upload coverage reports to Codecov
-#         uses: codecov/codecov-action@v3
-#         env:
-#           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-#         continue-on-error: true
-
-name: Deploy Nginx
+name: Test and deploy backend
 
 on:
   push:
-    branches:
-      - "main"
+    branches: ["main"]
   pull_request:
-    branches:
-      - "main"
+    branches: ["main"]
 
 jobs:
-  deploy:
+  backend:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./backend
 
+    strategy:
+      max-parallel: 4
+      matrix:
+        # python-version: [3.8, 3.9, 3.11]
+        python-version: [3.11]
+
     steps:
-      - name: code checkout
-        uses: actions/checkout@v2
-
-      - name: install the gcloud cli
-        uses: "google-github-actions/setup-gcloud@v2"
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
         with:
-          project_id: black-media-417713
-          install_components: "gke-gcloud-auth-plugin"
-
-      - uses: "google-github-actions/auth@v2"
-        with:
-          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
-
-      - name: Get authenticated service account
-        run: gcloud auth list --filter=status:ACTIVE --format="value(account)"
-
-      # - name: Configure Docker to use the gcloud command-line tool as a credential helper
-      #   run: gcloud auth configure-docker europe-west3-docker.pkg.dev
-
-      # - name: build and push the docker image
-      #   env:
-      #     GOOGLE_PROJECT: black-media-417713
-      #   run: |
-      #     docker build -t europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest .
-      #     docker push europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
-
-      # - name: Deploy to Cloud Run
-      #   uses: "google-github-actions/deploy-cloudrun@v2"
-      #   with:
-      #     service: fundfriednd
-      #     region: europe-west3
-      #     image: europe-west3-docker.pkg.dev/black-media-417713/fundfriendbackend/fundfriednd:latest
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Lint Code
+        run: |
+          ruff .
+        continue-on-error: true
+      - name: Run Tests
+        run: |
+          pytest --cov=./ --cov-report=xml
+        continue-on-error: true
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        continue-on-error: true
