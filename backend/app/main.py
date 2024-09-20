@@ -38,7 +38,11 @@ async def create_user(
     return crud.create_user(db=db, user=user)
 
 
-@app.get("/users/", response_model=list[schemas.User])
+@app.get(
+    "/users/",
+    response_model=list[schemas.User],
+    status_code=status.HTTP_200_OK,
+)
 async def read_users(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ) -> list[schemas.User]:
@@ -46,7 +50,11 @@ async def read_users(
     return users
 
 
-@app.get("/users/{user_id}", response_model=schemas.User)
+@app.get(
+    "/users/{user_id}",
+    response_model=schemas.User,
+    status_code=status.HTTP_200_OK,
+)
 async def read_user(
     user_id: int, db: Session = Depends(get_db)
 ) -> schemas.User:
@@ -67,7 +75,11 @@ async def create_item_for_user(
     return crud.create_user_item(db=db, item=item, user_id=user_id)
 
 
-@app.get("/items/", response_model=list[schemas.Item])
+@app.get(
+    "/items/",
+    response_model=list[schemas.Item],
+    status_code=status.HTTP_200_OK,
+)
 async def read_items(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ) -> list[schemas.Item]:
