@@ -8,7 +8,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.post(
-    "/users/", response_model=schemas.User, status_code=status.HTTP_201_CREATED
+    "/", response_model=schemas.User, status_code=status.HTTP_201_CREATED
 )
 async def create_user(
     user: schemas.UserCreate, db: Session = Depends(get_db)
@@ -23,7 +23,7 @@ async def create_user(
 
 
 @router.get(
-    "/users/",
+    "/",
     response_model=list[schemas.User],
     status_code=status.HTTP_200_OK,
 )
@@ -35,7 +35,7 @@ async def read_users(
 
 
 @router.get(
-    "/users/{user_id}",
+    "/{user_id}",
     response_model=schemas.User,
     status_code=status.HTTP_200_OK,
 )

@@ -8,7 +8,7 @@ router = APIRouter(prefix="/items", tags=["items"])
 
 
 @router.post(
-    "/users/{user_id}/items/",
+    "/{user_id}/",
     response_model=schemas.Item,
     status_code=status.HTTP_201_CREATED,
 )
@@ -19,7 +19,7 @@ async def create_item_for_user(
 
 
 @router.get(
-    "/items/",
+    "/",
     response_model=list[schemas.Item],
     status_code=status.HTTP_200_OK,
 )
