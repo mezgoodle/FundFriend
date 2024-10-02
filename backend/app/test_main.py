@@ -6,11 +6,10 @@ from sqlalchemy.orm import sessionmaker
 from .database import Base
 from .dependencies import get_db
 from .main import app
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+from .settings import settings
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    settings.test_database_url, connect_args={"check_same_thread": False}
 )
 TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine
