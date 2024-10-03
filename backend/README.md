@@ -5,4 +5,7 @@ docker run -d --name myfastapiapp -p 8000:8000 myfastapiapp
 
 # How to run the FastAPI app locally
 
-uvicorn app.main:app --reload
+```cmd
+cd ./app
+fastapi run main.py
+```

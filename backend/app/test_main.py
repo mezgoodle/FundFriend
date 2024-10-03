@@ -4,12 +4,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from .database import Base
-from .main import app, get_db
-
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+from .dependencies import get_db
+from .main import app
+from .settings import settings
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    settings.test_database_url, connect_args={"check_same_thread": False}
 )
 TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine
@@ -85,7 +85,7 @@ def test_read_user(client, user_id, expected_status_code):
 )
 def test_create_item_for_user(client, user_id, title, description):
     response = client.post(
-        f"/users/{user_id}/items/",
+        f"/items/{user_id}/",
         json={"title": title, "description": description},
     )
     assert response.status_code == 201
