@@ -12,15 +12,39 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
 
-    items = relationship("Item", back_populates="owner")
+    chats = relationship("Chat", back_populates="owner")
+    messages = relationship("Message", back_populates="owner")
+    documents = relationship("Document", back_populates="owner")
 
 
-class Item(Base):
-    __tablename__ = "items"
+class Chat(Base):
+    __tablename__ = "chats"
 
     id = Column(Integer, primary_key=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
+    message = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="items")
+    owner = relationship("User", back_populates="chats")
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True)
+    message = Column(String, index=True)
+    chat_id = Column(Integer, ForeignKey("chats.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
+    chat = relationship("Chat", back_populates="messages")
+
+    owner = relationship("User", back_populates="messages")
+
+
+class Document(Base):
+    __tablename__ = "documents"
+
+    id = Column(Integer, primary_key=True)
+    bucket_url = Column(String, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+
+    owner = relationship("User", back_populates="documents")
