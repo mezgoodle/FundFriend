@@ -25,6 +25,7 @@ class Chat(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="chats")
+    messages = relationship("Message", back_populates="chat")
 
 
 class Message(Base):
@@ -36,7 +37,6 @@ class Message(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     chat = relationship("Chat", back_populates="messages")
-
     owner = relationship("User", back_populates="messages")
 
 

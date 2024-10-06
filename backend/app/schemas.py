@@ -1,32 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
-
-
-class ItemBase(BaseModel):
-    title: str = Field(min_length=1, max_length=100)
-    description: str | None = None
-
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "title": "Foo",
-                    "description": "A very nice Item",
-                }
-            ]
-        }
-    }
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
-    id: int
-    owner_id: int
-
-    class Config:
-        orm_mode = True
+from pydantic import BaseModel, EmailStr
 
 
 class UserBase(BaseModel):
@@ -63,7 +35,6 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool
-    items: list[Item] = []
 
     class Config:
         orm_mode = True
@@ -74,7 +45,6 @@ class User(UserBase):
                         0
                     ],
                     "is_active": True,
-                    "items": [],
                 }
             ]
         }

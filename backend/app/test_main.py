@@ -77,22 +77,3 @@ def test_read_users(client, skip, limit):
 def test_read_user(client, user_id, expected_status_code):
     response = client.get(f"/users/{user_id}")
     assert response.status_code == expected_status_code
-
-
-@pytest.mark.parametrize(
-    "user_id,title,description",
-    [(1, "Item 1", "Description 1"), (2, "Item 2", "Description 2")],
-)
-def test_create_item_for_user(client, user_id, title, description):
-    response = client.post(
-        f"/items/{user_id}/",
-        json={"title": title, "description": description},
-    )
-    assert response.status_code == 201
-
-
-@pytest.mark.parametrize("skip,limit", [(0, 100), (10, 50)])
-def test_read_items(client, skip, limit):
-    response = client.get("/items/", params={"skip": skip, "limit": limit})
-    assert response.status_code == 200
-    assert len(response.json()) <= limit
