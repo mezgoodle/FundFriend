@@ -21,7 +21,7 @@ class Chat(Base):
     __tablename__ = "chats"
 
     id = Column(Integer, primary_key=True)
-    message = Column(String, index=True)
+    title = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="chats")
@@ -32,7 +32,7 @@ class Message(Base):
     __tablename__ = "messages"
 
     id = Column(Integer, primary_key=True)
-    message = Column(String, index=True)
+    text = Column(String, index=True)
     chat_id = Column(Integer, ForeignKey("chats.id"))
     owner_id = Column(Integer, ForeignKey("users.id"))
 
