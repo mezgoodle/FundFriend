@@ -1,4 +1,4 @@
-from .crud import UserCRUD
+from .crud.user import UserCRUD
 from .database import SessionLocal
 
 
