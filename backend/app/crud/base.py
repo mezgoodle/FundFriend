@@ -18,7 +18,9 @@ class CRUD:
         self, db: Session, obj_in: BaseModel, additional_data: dict = None
     ):
         obj_in_data = obj_in.model_dump()
-        db_obj = self.model(**obj_in_data, **additional_data)
+        if additional_data:
+            obj_in_data.update(additional_data)
+        db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
