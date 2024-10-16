@@ -1,13 +1,26 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from typing import Annotated
 
-from . import models
-from .database import engine
+from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from sqlmodel import Session
+
+from .database import create_db_and_tables, get_session
 from .routers import chats, documents, messages, users
 
-models.Base.metadata.create_all(bind=engine)
+SessionDep = Annotated[Session, Depends(get_session)]
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        await create_db_and_tables()
+        yield
+    finally:
+        pass
+
+
+app = FastAPI(lifespan=lifespan)
 app.include_router(users.router)
 app.include_router(chats.router)
 app.include_router(messages.router)
