@@ -1,24 +1,29 @@
-from typing import Optional
+from sqlmodel import Field, Relationship, SQLModel
 
-from pydantic import BaseModel
+from .chat import Chat
+from .user import User
 
 
-class MessageBase(BaseModel):
+class MessageBase(SQLModel):
     text: str
-    chat_id: int
 
 
 class MessageCreate(MessageBase):
     pass
 
 
-class MessageUpdate(MessageBase):
-    text: Optional[str] = None
+class MessageUpdate(SQLModel):
+    text: str | None = None
 
 
 class MessageOut(MessageBase):
     id: int
-    owner_id: int
 
-    class Config:
-        orm_mode = True
+
+class Message(MessageBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+
+    chat_id: int = Field(foreign_key="chat.id")
+    owner_id: int = Field(foreign_key="user.id")
+    chat: "Chat" = Relationship(back_populates="messages")
+    owner: "User" = Relationship(back_populates="messages")

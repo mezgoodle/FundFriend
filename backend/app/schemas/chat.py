@@ -1,8 +1,12 @@
-from pydantic import BaseModel
+from sqlmodel import Field, Relationship, SQLModel
+
+from .message import Message
+from .user import User
 
 
-class ChatBase(BaseModel):
+class ChatBase(SQLModel):
     title: str
+    description: str | None = None
 
 
 class ChatCreate(ChatBase):
@@ -10,13 +14,16 @@ class ChatCreate(ChatBase):
 
 
 class ChatUpdate(ChatBase):
-    pass
+    title: str | None = None
+    description: str | None = None
 
 
 class ChatOut(ChatBase):
     id: int
-    owner_id: int
-    messages: list[dict] = []
 
-    class Config:
-        orm_mode = True
+
+class Chat(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    owner_id: int = Field(foreign_key="user.id")
+    owner: "User" = Relationship(back_populates="chats")
+    messages: list["Message"] = Relationship(back_populates="chat")

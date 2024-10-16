@@ -1,50 +1,33 @@
-from pydantic import BaseModel, EmailStr
+from sqlmodel import Field, Relationship, SQLModel
+
+from .chat import Chat
+from .document import Document
+from .message import Message
 
 
-class UserBase(BaseModel):
-    email: EmailStr
+class UserBase(SQLModel):
+    email: str = Field(index=True)
+    name: str = Field()
+    is_active: bool = Field(default=True)
 
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "email": "a@b.com",
-                }
-            ]
-        }
-    }
+
+class User(UserBase, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    hashed_password: str
+    chats: list["Chat"] = Relationship(back_populates="owner")
+    messages: list["Message"] = Relationship(back_populates="owner")
+    documents: list["Document"] = Relationship(back_populates="owner")
+
+
+class UserOut(UserBase):
+    id: int
 
 
 class UserCreate(UserBase):
     password: str
 
-    model_config = {
-        "json_schema_extra": {
-            "examples": [
-                {
-                    **UserBase.model_config["json_schema_extra"]["examples"][
-                        0
-                    ],
-                    "password": "secret",
-                }
-            ]
-        }
-    }
 
-
-class User(UserBase):
-    id: int
-    is_active: bool
-
-    class Config:
-        orm_mode = True
-        json_schema_extra = {
-            "examples": [
-                {
-                    **UserBase.model_config["json_schema_extra"]["examples"][
-                        0
-                    ],
-                    "is_active": True,
-                }
-            ]
-        }
+class UserUpdate(UserBase):
+    email: str | None = None
+    is_active: bool | None = None
+    password: str | None = None
