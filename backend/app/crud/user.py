@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlmodel import Session, select
 
 from ..schemas.user import UserCreate
 from .base import CRUD
@@ -9,8 +9,9 @@ class UserCRUD(CRUD):
     def __init__(self):
         super().__init__(Model.User.value)
 
-    def get_user_by_email(self, db: Session, email: str):
-        return db.query(self.model).filter(self.model.email == email).first()
+    def get_user_by_email(self, session: Session, email: str):
+        statement = select(self.model).where(self.model.email == email)
+        return session.exec(statement).first()
 
     def create(self, db: Session, obj_in: UserCreate):
         hashed_password = obj_in.password + "notreallyhashed"

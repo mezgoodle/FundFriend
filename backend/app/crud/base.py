@@ -1,5 +1,8 @@
+from typing import Annotated
+
+from fastapi import Query
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from sqlmodel import Session, select
 
 from .enums import Model
 
@@ -8,36 +11,46 @@ class CRUD:
     def __init__(self, model: Model):
         self.model = model
 
-    def get(self, db: Session, id: int):
-        return db.query(self.model).filter(self.model.id == id).first()
+    def get(self, session: Session, id: int):
+        return session.get(self.model, id)
 
-    def get_all(self, db: Session, limit: int = 100, skip: int = 0):
-        return db.query(self.model).offset(skip).limit(limit).all()
+    def get_all(
+        self,
+        session: Session,
+        offset: int = 0,
+        limit: Annotated[int, Query(le=100)] = 100,
+    ):
+        return session.exec(
+            select(self.model).offset(offset).limit(limit)
+        ).all()
 
     def create(
-        self, db: Session, obj_in: BaseModel, additional_data: dict = None
+        self, session: Session, obj_in: BaseModel, additional_data: dict = None
     ):
         obj_in_data = obj_in.model_dump()
         if additional_data:
             obj_in_data.update(additional_data)
         db_obj = self.model(**obj_in_data)
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
+        session.add(db_obj)
+        session.commit()
+        session.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, id: int, obj_in: BaseModel):
-        obj = db.query(self.model).filter(self.model.id == id).first()
-        obj_in_data = obj_in.dict(exclude_unset=True)
-        for field in obj_in_data:
-            setattr(obj, field, obj_in_data[field])
-        db.add(obj)
-        db.commit()
-        db.refresh(obj)
+    def update(self, session: Session, id: int, obj_in: BaseModel):
+        obj = session.get(self.model, id)
+        if not obj:
+            return None
+        obj_in_data = obj_in.model_dump(exclude_unset=True)
+        obj.sqlmodel_update(obj_in_data)
+        session.add(obj)
+        session.commit()
+        session.refresh(obj)
         return obj
 
-    def delete(self, db: Session, id: int):
-        obj = db.query(self.model).filter(self.model.id == id).first()
-        db.delete(obj)
-        db.commit()
-        return obj
+    def delete(self, session: Session, id: int):
+        obj = session.get(self.model, id)
+        if not obj:
+            return None
+        session.delete(obj)
+        session.commit()
+        return {"ok": True}
