@@ -1,16 +1,21 @@
+from typing import Annotated
+
+from fastapi import Depends
+from sqlmodel import Session
+
 from .crud.chat import ChatCRUD
 from .crud.document import DocumentCRUD
 from .crud.message import MessageCRUD
 from .crud.user import UserCRUD
-from .database import SessionLocal
+from .database import engine
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+def get_session():
+    with Session(engine) as session:
+        yield session
+
+
+SessionDep = Annotated[Session, Depends(get_session)]
 
 
 def get_user_crud() -> UserCRUD:

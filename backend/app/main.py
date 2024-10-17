@@ -1,20 +1,16 @@
 from contextlib import asynccontextmanager
-from typing import Annotated
 
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlmodel import Session
 
-from .database import create_db_and_tables, get_session
+from .database import create_db_and_tables
 from .routers import chats, documents, messages, users
-
-SessionDep = Annotated[Session, Depends(get_session)]
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
-        await create_db_and_tables()
+        create_db_and_tables()
         yield
     finally:
         pass
