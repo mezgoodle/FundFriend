@@ -1,6 +1,9 @@
+from typing import TYPE_CHECKING
+
 from sqlmodel import Field, Relationship, SQLModel
 
-from .user import User
+if TYPE_CHECKING:
+    from .user import User
 
 
 class DocumentBase(SQLModel):

@@ -1,7 +1,10 @@
+from typing import TYPE_CHECKING
+
 from sqlmodel import Field, Relationship, SQLModel
 
-from .message import Message
-from .user import User
+if TYPE_CHECKING:
+    from .message import Message
+    from .user import User
 
 
 class ChatBase(SQLModel):
