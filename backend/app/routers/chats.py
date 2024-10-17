@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 
 from ..crud.chat import ChatCRUD
-from ..dependencies import get_chat_crud, get_db
+from ..dependencies import SessionDep, get_chat_crud
 from ..schemas.chat import ChatCreate, ChatOut, ChatUpdate
 
 router = APIRouter(
@@ -13,10 +12,10 @@ router = APIRouter(
 @router.post("/", response_model=ChatOut)
 def create_chat(
     chat: ChatCreate,
-    db: Session = Depends(get_db),
+    session: SessionDep,
     chat_crud: ChatCRUD = Depends(),
 ):
-    return chat_crud.create(db, chat)
+    return chat_crud.create(session, chat)
 
 
 @router.get(
@@ -25,22 +24,22 @@ def create_chat(
     status_code=status.HTTP_200_OK,
 )
 async def read_chats(
+    session: SessionDep,
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(get_db),
     chat_crud: ChatCRUD = Depends(),
 ) -> list[ChatOut]:
-    chats = chat_crud.get_all(db, skip=skip, limit=limit)
+    chats = chat_crud.get_all(session, skip, limit)
     return chats
 
 
 @router.get("/{chat_id}", response_model=ChatOut)
 def read_chat(
     chat_id: int,
-    db: Session = Depends(get_db),
+    session: SessionDep,
     chat_crud: ChatCRUD = Depends(),
 ):
-    db_chat = chat_crud.get(db, chat_id)
+    db_chat = chat_crud.get(session, chat_id)
     if db_chat is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chat not found"
@@ -52,10 +51,10 @@ def read_chat(
 def update_chat(
     chat_id: int,
     chat: ChatUpdate,
-    db: Session = Depends(get_db),
+    session: SessionDep,
     chat_crud: ChatCRUD = Depends(),
 ):
-    db_chat = chat_crud.update(db, chat_id, chat)
+    db_chat = chat_crud.update(session, chat_id, chat)
     if db_chat is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chat not found"
@@ -66,10 +65,10 @@ def update_chat(
 @router.delete("/{chat_id}")
 def delete_chat(
     chat_id: int,
-    db: Session = Depends(get_db),
+    session: SessionDep,
     chat_crud: ChatCRUD = Depends(),
 ):
-    db_chat = chat_crud.delete(db, chat_id)
+    db_chat = chat_crud.delete(session, chat_id)
     if db_chat is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chat not found"

@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from ..crud.user import UserCRUD
-from ..dependencies import get_db, get_user_crud
-from ..main import SessionDep
+from ..dependencies import SessionDep, get_user_crud
 from ..schemas.user import User, UserCreate
 
 router = APIRouter(
@@ -13,16 +12,16 @@ router = APIRouter(
 @router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
 async def create_user(
     user: UserCreate,
-    db: SessionDep,
+    session: SessionDep,
     user_crud: UserCRUD = Depends(),
 ) -> User:
-    db_user = user_crud.get_user_by_email(db, email=user.email)
+    db_user = user_crud.get_user_by_email(session, email=user.email)
     if db_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
         )
-    return user_crud.create(db=db, obj_in=user)
+    return user_crud.create(session, obj_in=user)
 
 
 @router.get(
@@ -36,7 +35,7 @@ async def read_users(
     limit: int = 100,
     user_crud: UserCRUD = Depends(),
 ) -> list[User]:
-    users = user_crud.get_all(session, skip=skip, limit=limit)
+    users = user_crud.get_all(session, skip, limit)
     return users
 
 
