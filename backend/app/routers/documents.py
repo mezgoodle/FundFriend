@@ -34,6 +34,21 @@ def read_document(
     return db_document
 
 
+@router.get(
+    "/",
+    response_model=list[DocumentOut],
+    status_code=status.HTTP_200_OK,
+)
+async def read_documents(
+    session: SessionDep,
+    offset: int = 0,
+    limit: int = 100,
+    document_crud: DocumentCRUD = Depends(),
+) -> list[DocumentOut]:
+    documents = document_crud.get_all(session, offset, limit)
+    return documents
+
+
 @router.put("/{document_id}", response_model=DocumentOut)
 def update_document(
     document_id: int,

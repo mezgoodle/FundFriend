@@ -25,11 +25,11 @@ def create_chat(
 )
 async def read_chats(
     session: SessionDep,
-    skip: int = 0,
+    offset: int = 0,
     limit: int = 100,
     chat_crud: ChatCRUD = Depends(),
 ) -> list[ChatOut]:
-    chats = chat_crud.get_all(session, skip, limit)
+    chats = chat_crud.get_all(session, offset, limit)
     return chats
 
 

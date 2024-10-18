@@ -32,6 +32,21 @@ def read_message(
     return db_message
 
 
+@router.get(
+    "/",
+    response_model=list[MessageOut],
+    status_code=status.HTTP_200_OK,
+)
+async def read_messages(
+    session: SessionDep,
+    offset: int = 0,
+    limit: int = 100,
+    message_crud: MessageCRUD = Depends(),
+) -> list[MessageOut]:
+    messages = message_crud.get_all(session, offset, limit)
+    return messages
+
+
 @router.put("/{message_id}", response_model=MessageOut)
 def update_message(
     message_id: int,

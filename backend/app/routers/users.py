@@ -31,11 +31,11 @@ async def create_user(
 )
 async def read_users(
     session: SessionDep,
-    skip: int = 0,
+    offset: int = 0,
     limit: int = 100,
     user_crud: UserCRUD = Depends(),
 ) -> list[User]:
-    users = user_crud.get_all(session, skip, limit)
+    users = user_crud.get_all(session, offset, limit)
     return users
 
 
