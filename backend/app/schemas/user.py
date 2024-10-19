@@ -6,7 +6,7 @@ from .message import Message
 
 
 class UserBase(SQLModel):
-    email: str = Field(index=True)
+    email: str = Field(index=True, unique=True)
     name: str = Field()
     is_active: bool = Field(default=True)
 
@@ -28,6 +28,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
+    name: str | None = None
     email: str | None = None
     is_active: bool | None = None
     password: str | None = None

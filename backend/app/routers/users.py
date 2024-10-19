@@ -86,4 +86,4 @@ async def delete_user(
     db_user = user_crud.delete(session, user_id)
     if db_user is None:
         raise HTTPException()
-    return {"message": "Message deleted successfully"}
+    return {"message": "User deleted successfully"}
