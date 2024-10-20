@@ -1,3 +1,5 @@
+from pydantic import EmailStr
+from sqlalchemy import UniqueConstraint
 from sqlmodel import Field, Relationship, SQLModel
 
 from .chat import Chat
@@ -6,12 +8,13 @@ from .message import Message
 
 
 class UserBase(SQLModel):
-    email: str = Field(index=True, unique=True)
+    email: EmailStr = Field(index=True, unique=True)
     name: str = Field()
     is_active: bool = Field(default=True)
 
 
 class User(UserBase, table=True):
+    __table_args__ = (UniqueConstraint("email", name="uq_user_email"),)
     id: int | None = Field(default=None, primary_key=True)
     hashed_password: str
     chats: list["Chat"] = Relationship(back_populates="owner")
