@@ -5,7 +5,8 @@ from sqlmodel.pool import StaticPool
 
 from ..dependencies import get_session
 from ..main import app
-from ..schemas import message as message_schema
+
+# from ..schemas import message as message_schema
 from ..schemas import user as user_schema
 
 # Створення тестової бази даних в пам'яті
