@@ -1,55 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine
-from sqlmodel.pool import StaticPool
+from sqlmodel import Session
 
-from .dependencies import get_session
-from .main import app
-from .schemas.user import User, UserCreate
-
-
-@pytest.fixture(name="session")
-def session_fixture():
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
-    SQLModel.metadata.create_all(engine)
-    with Session(engine) as session:
-        yield session
-
-
-@pytest.fixture
-def test_user(session: Session):
-    user_data = UserCreate(
-        email="existing_user@example.com",
-        name="Existing User",
-        password="password123",
-    )
-    user_data.password = None
-    user = User(**user_data.model_dump(), hashed_password="password123")
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return user
-
-
-@pytest.fixture(name="client")
-def client_fixture(session: Session):
-    def get_session_override():
-        return session
-
-    app.dependency_overrides[get_session] = get_session_override
-    client = TestClient(app)
-    yield client
-    app.dependency_overrides.clear()
-
-
-def test_read_main(client: TestClient):
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"message": "Hello World"}
+from ..schemas.user import User
 
 
 @pytest.mark.parametrize(
