@@ -99,3 +99,26 @@ def test_read_users(client, offset, limit):
 def test_read_user(test_user, client, user_id, expected_status_code):
     response = client.get(f"/users/{user_id}")
     assert response.status_code == expected_status_code
+
+
+def test_update_user(test_user, client):
+    user_id = test_user.id
+
+    response = client.put(f"/users/{user_id}", json={"name": "Deadpuddle"})
+    data = response.json()
+
+    assert response.status_code == 200
+    assert data["name"] == "Deadpuddle"
+    assert data["id"] == user_id
+
+
+def test_delete_user(test_user, session: Session, client: TestClient):
+    user_id = test_user.id
+
+    response = client.delete(f"/users/{user_id}")
+
+    user_in_db = session.get(User, user_id)
+
+    assert response.status_code == 200
+
+    assert user_in_db is None
