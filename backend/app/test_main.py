@@ -5,6 +5,7 @@ from sqlmodel.pool import StaticPool
 
 from .dependencies import get_session
 from .main import app
+from .schemas.user import User, UserCreate
 
 
 @pytest.fixture(name="session")
@@ -17,6 +18,21 @@ def session_fixture():
     SQLModel.metadata.create_all(engine)
     with Session(engine) as session:
         yield session
+
+
+@pytest.fixture
+def test_user(session: Session):
+    user_data = UserCreate(
+        email="existing_user@example.com",
+        name="Existing User",
+        password="password123",
+    )
+    user_data.password = None
+    user = User(**user_data.model_dump(), hashed_password="password123")
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
 
 
 @pytest.fixture(name="client")
@@ -46,10 +62,12 @@ def test_read_main(client: TestClient):
             201,
             ["email", "name", "is_active", "id"],
         ),
+        ("existing_user@example.com", "password123", "Existing User", 400, []),
         ("invalid_email", "password123", "test2", 422, []),
     ],
 )
 def test_create_user(
+    test_user: User,
     client: TestClient,
     email: str,
     password: str,
@@ -68,16 +86,16 @@ def test_create_user(
         assert data[field] is not None
 
 
-# @pytest.mark.parametrize("skip,limit", [(0, 100), (10, 50)])
-# def test_read_users(client, skip, limit):
-#     response = client.get("/users/", params={"skip": skip, "limit": limit})
-#     assert response.status_code == 200
-#     assert len(response.json()) <= limit
+@pytest.mark.parametrize("offset,limit", [(0, 100), (10, 50)])
+def test_read_users(client, offset, limit):
+    response = client.get("/users/", params={"offset": offset, "limit": limit})
+    assert response.status_code == 200
+    assert len(response.json()) <= limit
 
 
-# @pytest.mark.parametrize(
-#     "user_id,expected_status_code", [(1, 200), (100, 404), (100, 404)]
-# )
-# def test_read_user(client, user_id, expected_status_code):
-#     response = client.get(f"/users/{user_id}")
-#     assert response.status_code == expected_status_code
+@pytest.mark.parametrize(
+    "user_id,expected_status_code", [(1, 200), (100, 404), (100, 404)]
+)
+def test_read_user(test_user, client, user_id, expected_status_code):
+    response = client.get(f"/users/{user_id}")
+    assert response.status_code == expected_status_code
