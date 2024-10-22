@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=ChatOut)
+@router.post("/", response_model=ChatOut, status_code=status.HTTP_201_CREATED)
 def create_chat(
     chat: ChatCreate,
     session: SessionDep,
