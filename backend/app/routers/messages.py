@@ -11,7 +11,9 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=MessageOut)
+@router.post(
+    "/", response_model=MessageOut, status_code=status.HTTP_201_CREATED
+)
 def create_message(
     message: MessageCreate,
     session: SessionDep,
@@ -62,7 +64,7 @@ def update_message(
     return db_message
 
 
-@router.delete("/{message_id}")
+@router.delete("/{message_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_message(
     message_id: int, session: SessionDep, message_crud: MessageCRUD = Depends()
 ):

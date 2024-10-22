@@ -7,8 +7,7 @@ from ..dependencies import get_session
 from ..main import app
 from ..schemas import chat as chat_schema
 from ..schemas import document as document_schema
-
-# from ..schemas import message as message_schema
+from ..schemas import message as message_schema
 from ..schemas import user as user_schema
 
 # Створення тестової бази даних в пам'яті
@@ -84,15 +83,17 @@ def test_document(session: Session, test_user: user_schema.User):
     return document
 
 
-# @pytest.fixture
-# def test_message(session: Session, test_user: user_schema.User):
-#     message_data = message_schema.MessageCreate(
-#         sender_id=test_user.id,
-#         receiver_id=test_user.id,
-#         content="Hello, World!",
-#     )
-#     message = message_schemaMessage(**message_data.model_dump())
-#     session.add(message)
-#     session.commit()
-#     session.refresh(message)
-#     return message
+@pytest.fixture
+def test_message(
+    session: Session, test_user: user_schema.User, test_chat: chat_schema.Chat
+):
+    message_data = message_schema.MessageCreate(
+        owner_id=test_user.id,
+        chat_id=test_chat.id,
+        text="Hello, World!",
+    )
+    message = message_schema.Message(**message_data.model_dump())
+    session.add(message)
+    session.commit()
+    session.refresh(message)
+    return message
