@@ -6,6 +6,7 @@ from sqlmodel.pool import StaticPool
 from ..dependencies import get_session
 from ..main import app
 from ..schemas import chat as chat_schema
+from ..schemas import document as document_schema
 
 # from ..schemas import message as message_schema
 from ..schemas import user as user_schema
@@ -67,6 +68,20 @@ def test_chat(session: Session, test_user: user_schema.User):
     session.commit()
     session.refresh(chat)
     return chat
+
+
+@pytest.fixture
+def test_document(session: Session, test_user: user_schema.User):
+    document_data = document_schema.DocumentCreate(
+        name="Test Document",
+        bucket_url="https://example.com/test.pdf",
+        owner_id=test_user.id,
+    )
+    document = document_schema.Document(**document_data.model_dump())
+    session.add(document)
+    session.commit()
+    session.refresh(document)
+    return document
 
 
 # @pytest.fixture

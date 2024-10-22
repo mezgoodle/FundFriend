@@ -11,7 +11,9 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=DocumentOut)
+@router.post(
+    "/", response_model=DocumentOut, status_code=status.HTTP_201_CREATED
+)
 def create_document(
     document: DocumentCreate,
     session: SessionDep,
@@ -64,7 +66,7 @@ def update_document(
     return db_document
 
 
-@router.delete("/{document_id}")
+@router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_document(
     document_id: int,
     session: SessionDep,
