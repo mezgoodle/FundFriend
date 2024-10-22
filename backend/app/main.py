@@ -1,15 +1,26 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import models
-from .database import engine
-from .routers import items, users
+from .database import create_db_and_tables
+from .routers import chats, documents, messages, users
 
-models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        create_db_and_tables()
+        yield
+    finally:
+        pass
+
+
+app = FastAPI(lifespan=lifespan)
 app.include_router(users.router)
-app.include_router(items.router)
+app.include_router(chats.router)
+app.include_router(messages.router)
+app.include_router(documents.router)
 
 origins = ["*"]
 
