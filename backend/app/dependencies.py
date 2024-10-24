@@ -7,7 +7,7 @@ from .crud.chat import ChatCRUD
 from .crud.document import DocumentCRUD
 from .crud.message import MessageCRUD
 from .crud.user import UserCRUD
-from .database import engine
+from .utils.database import engine
 
 
 def get_session():
