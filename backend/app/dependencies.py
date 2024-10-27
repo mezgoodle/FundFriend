@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from sqlmodel import Session
 
@@ -30,6 +31,7 @@ def get_settings() -> Settings:
 SessionDep = Annotated[Session, Depends(get_session)]
 PasswordUtilsDep = Annotated[PasswordUtils, Depends(get_password_utils)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login/")
 
 
 def get_user_crud() -> UserCRUD:
@@ -48,17 +50,11 @@ def get_document_crud() -> DocumentCRUD:
     return DocumentCRUD()
 
 
-def get_oauth2_scheme(
-    password_utils: PasswordUtils = Depends(get_password_utils),
-):
-    return password_utils.oauth2_scheme
-
-
 async def get_current_user(
-    password_utils: Annotated[PasswordUtils, Depends(get_password_utils)],
-    token: Annotated[str, Depends(get_oauth2_scheme)],
+    session: SessionDep,
+    password_utils: PasswordUtilsDep,
+    token: Annotated[str, Depends(oauth2_scheme)],
     user_crud: Annotated[UserCRUD, Depends(get_user_crud)],
-    session: Annotated[Session, Depends(get_session)],
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -67,7 +63,8 @@ async def get_current_user(
     )
     try:
         token_data = password_utils.decode_token(token)
-    except InvalidTokenError:
+    except InvalidTokenError as e:
+        print(e)
         raise credentials_exception
     user = user_crud.get_user_by_email(session, token_data.email)
     if user is None:

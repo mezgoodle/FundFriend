@@ -1,8 +1,11 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from ..crud.chat import ChatCRUD
-from ..dependencies import SessionDep, get_chat_crud
+from ..dependencies import SessionDep, get_chat_crud, get_current_active_user
 from ..schemas.chat import ChatCreate, ChatOut, ChatUpdate
+from ..schemas.user import UserOut
 
 router = APIRouter(
     prefix="/chats", tags=["chats"], dependencies=[Depends(get_chat_crud)]
@@ -13,6 +16,7 @@ router = APIRouter(
 def create_chat(
     chat: ChatCreate,
     session: SessionDep,
+    current_user: Annotated[UserOut, Depends(get_current_active_user)],
     chat_crud: ChatCRUD = Depends(),
 ):
     return chat_crud.create(session, chat)

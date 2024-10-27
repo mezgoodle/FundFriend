@@ -14,10 +14,7 @@ class PasswordUtils:
         self.secret_key = settings.hash_secret_key
         self.algorithm = settings.hash_algorithm
         self.access_token_expire_minutes = settings.access_token_expire_minutes
-
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-        self.oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
