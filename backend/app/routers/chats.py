@@ -19,7 +19,7 @@ def create_chat(
     current_user: Annotated[UserOut, Depends(get_current_active_user)],
     chat_crud: ChatCRUD = Depends(),
 ):
-    return chat_crud.create(session, chat)
+    return chat_crud.create(session, chat, current_user.id)
 
 
 @router.get(

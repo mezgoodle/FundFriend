@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 class ChatBase(SQLModel):
     title: str
     description: str | None = None
-    owner_id: int = Field(foreign_key="user.id", default=None)
 
 
 class ChatCreate(ChatBase):
@@ -24,10 +23,11 @@ class ChatUpdate(ChatBase):
 
 class ChatOut(ChatBase):
     id: int
+    owner_id: int
 
 
 class Chat(ChatBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-
+    owner_id: int = Field(foreign_key="user.id", default=None)
     owner: "User" = Relationship(back_populates="chats")
     messages: list["Message"] = Relationship(back_populates="chat")
