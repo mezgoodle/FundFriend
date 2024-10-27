@@ -10,7 +10,7 @@ from .message import Message
 class UserBase(SQLModel):
     email: EmailStr = Field(index=True, unique=True)
     name: str = Field()
-    is_active: bool = Field(default=True)
+    is_active: bool = Field(default=False)
 
 
 class User(UserBase, table=True):
