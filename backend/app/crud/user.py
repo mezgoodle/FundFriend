@@ -14,6 +14,6 @@ class UserCRUD(CRUD):
         return session.exec(statement).first()
 
     def create(self, db: Session, obj_in: UserCreate):
-        hashed_password = obj_in.password + "notreallyhashed"
+        hashed_password = obj_in.password
         del obj_in.password
         return super().create(db, obj_in, {"hashed_password": hashed_password})

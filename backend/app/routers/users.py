@@ -1,7 +1,18 @@
+from datetime import timedelta
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 
 from ..crud.user import UserCRUD
-from ..dependencies import SessionDep, get_user_crud
+from ..dependencies import (
+    PasswordUtilsDep,
+    SessionDep,
+    SettingsDep,
+    get_current_active_user,
+    get_user_crud,
+)
+from ..schemas.token import Token
 from ..schemas.user import UserCreate, UserOut, UserUpdate
 
 router = APIRouter(
@@ -9,10 +20,52 @@ router = APIRouter(
 )
 
 
+@router.post("/login")
+async def login_for_access_token(
+    session: SessionDep,
+    settings: SettingsDep,
+    password_utils: PasswordUtilsDep,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    user_crud: UserCRUD = Depends(),
+) -> Token:
+    user_db = user_crud.get_user_by_email(session, form_data.username)
+    if not user_db:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    authenticated_user = password_utils.authenticate_user(
+        user_db, form_data.password
+    )
+    if not authenticated_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(
+        minutes=settings.access_token_expire_minutes
+    )
+    access_token = password_utils.create_access_token(
+        data={"sub": authenticated_user.email},
+        expires_delta=access_token_expires,
+    )
+    return Token(access_token=access_token, token_type="bearer")
+
+
+@router.get("/me", response_model=UserOut)
+async def read_users_me(
+    current_user: Annotated[UserOut, Depends(get_current_active_user)],
+):
+    return current_user
+
+
 @router.post("/", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def create_user(
     user: UserCreate,
     session: SessionDep,
+    password_utils: PasswordUtilsDep,
     user_crud: UserCRUD = Depends(),
 ) -> UserOut:
     db_user = user_crud.get_user_by_email(session, email=user.email)
@@ -21,6 +74,7 @@ async def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
         )
+    user.password = password_utils.get_password_hash(user.password)
     return user_crud.create(session, obj_in=user)
 
 
