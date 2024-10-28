@@ -18,6 +18,7 @@ class MessageCRUD(CRUD):
         return session.exec(statement).all()
 
     def create(self, session: Session, obj_in: BaseModel, user_id: int):
-        # chat_id = obj_in.chat_id
-        # if not chat:= session.get(self.model, chat_id):
+        chat_id = obj_in.chat_id
+        if not session.get(Model.Chat.value, chat_id):
+            return None
         return super().create(session, obj_in, {"owner_id": user_id})

@@ -27,7 +27,13 @@ def create_message(
     current_user: Annotated[UserOut, Depends(get_current_active_user)],
     message_crud: MessageCRUD = Depends(),
 ):
-    return message_crud.create(session, message, current_user.id)
+    if message := message_crud.create(session, message, current_user.id):
+        return message
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Error while creating message",
+        )
 
 
 @router.get("/{message_id}", response_model=MessageOut)
