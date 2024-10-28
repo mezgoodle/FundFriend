@@ -1,8 +1,15 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from ..crud.message import MessageCRUD
-from ..dependencies import SessionDep, get_message_crud
+from ..dependencies import (
+    SessionDep,
+    get_current_active_user,
+    get_message_crud,
+)
 from ..schemas.message import MessageCreate, MessageOut, MessageUpdate
+from ..schemas.user import UserOut
 
 router = APIRouter(
     prefix="/messages",
@@ -17,9 +24,10 @@ router = APIRouter(
 def create_message(
     message: MessageCreate,
     session: SessionDep,
+    current_user: Annotated[UserOut, Depends(get_current_active_user)],
     message_crud: MessageCRUD = Depends(),
 ):
-    return message_crud.create(session, message)
+    return message_crud.create(session, message, current_user.id)
 
 
 @router.get("/{message_id}", response_model=MessageOut)

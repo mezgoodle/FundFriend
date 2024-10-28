@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 class MessageBase(SQLModel):
     text: str
     chat_id: int = Field(foreign_key="chat.id", default=None)
-    owner_id: int = Field(foreign_key="user.id", default=None)
 
 
 class MessageCreate(MessageBase):
@@ -23,10 +22,11 @@ class MessageUpdate(SQLModel):
 
 class MessageOut(MessageBase):
     id: int
+    owner_id: int
 
 
 class Message(MessageBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
-
+    owner_id: int = Field(foreign_key="user.id", default=None)
     chat: "Chat" = Relationship(back_populates="messages")
     owner: "User" = Relationship(back_populates="messages")
