@@ -1,8 +1,15 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from ..crud.document import DocumentCRUD
-from ..dependencies import SessionDep, get_document_crud
+from ..dependencies import (
+    SessionDep,
+    get_current_active_user,
+    get_document_crud,
+)
 from ..schemas.document import DocumentCreate, DocumentOut, DocumentUpdate
+from ..schemas.user import UserOut
 
 router = APIRouter(
     prefix="/documents",
@@ -17,9 +24,10 @@ router = APIRouter(
 def create_document(
     document: DocumentCreate,
     session: SessionDep,
+    current_user: Annotated[UserOut, Depends(get_current_active_user)],
     document_crud: DocumentCRUD = Depends(),
 ):
-    return document_crud.create(session, document)
+    return document_crud.create(session, document, current_user.id)
 
 
 @router.get("/{document_id}", response_model=DocumentOut)
