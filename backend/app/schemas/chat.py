@@ -3,8 +3,9 @@ from typing import TYPE_CHECKING
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from .message import Message
     from .user import User
+
+from .message import Message
 
 
 class ChatBase(SQLModel):
@@ -31,3 +32,7 @@ class Chat(ChatBase, table=True):
     owner_id: int = Field(foreign_key="user.id", default=None)
     owner: "User" = Relationship(back_populates="chats")
     messages: list["Message"] = Relationship(back_populates="chat")
+
+
+class ChatOutWithMessages(ChatOut):
+    messages: list["Message"] = []

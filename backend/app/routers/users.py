@@ -13,14 +13,14 @@ from ..dependencies import (
     get_user_crud,
 )
 from ..schemas.token import Token
-from ..schemas.user import UserCreate, UserOut, UserUpdate
+from ..schemas.user import UserCreate, UserOut, UserOutWithItems, UserUpdate
 
 router = APIRouter(
     prefix="/users", tags=["users"], dependencies=[Depends(get_user_crud)]
 )
 
 
-@router.post("/login")
+@router.post("/login", response_model=Token)
 async def login_for_access_token(
     session: SessionDep,
     settings: SettingsDep,
@@ -95,7 +95,7 @@ async def read_users(
 
 @router.get(
     "/{user_id}",
-    response_model=UserOut,
+    response_model=UserOutWithItems,
     status_code=status.HTTP_200_OK,
 )
 async def read_user(

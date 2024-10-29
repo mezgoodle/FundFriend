@@ -35,3 +35,9 @@ class UserUpdate(UserBase):
     email: str | None = None
     is_active: bool | None = None
     password: str | None = None
+
+
+class UserOutWithItems(UserOut):
+    chats: list["Chat"] = []
+    messages: list["Message"] = []
+    documents: list["Document"] = []

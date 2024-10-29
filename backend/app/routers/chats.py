@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from ..crud.chat import ChatCRUD
 from ..dependencies import SessionDep, get_chat_crud, get_current_active_user
-from ..schemas.chat import ChatCreate, ChatOut, ChatUpdate
+from ..schemas.chat import ChatCreate, ChatOut, ChatOutWithMessages, ChatUpdate
 from ..schemas.user import UserOut
 
 router = APIRouter(
@@ -37,7 +37,7 @@ async def read_chats(
     return chats
 
 
-@router.get("/{chat_id}", response_model=ChatOut)
+@router.get("/{chat_id}", response_model=ChatOutWithMessages)
 def read_chat(
     chat_id: int,
     session: SessionDep,
