@@ -9,7 +9,7 @@ class MessageCRUD(CRUD):
     def __init__(self):
         super().__init__(Model.Message.value)
 
-    def get_message_by_user(self, session: Session, user_id: int):
+    def get_messages_by_user(self, session: Session, user_id: int):
         statement = select(self.model).where(self.model.owner_id == user_id)
         return session.exec(statement).all()
 

@@ -88,3 +88,23 @@ def delete_message(
             status_code=status.HTTP_404_NOT_FOUND, detail="Message not found"
         )
     return {"message": "Message deleted successfully"}
+
+
+@router.get("/user/{user_id}", status_code=status.HTTP_200_OK)
+async def read_messages_by_user(
+    user_id: int,
+    session: SessionDep,
+    message_crud: MessageCRUD = Depends(),
+) -> list[MessageOut]:
+    messages = message_crud.get_messages_by_user(session, user_id)
+    return messages
+
+
+@router.get("/chat/{chat_id}", status_code=status.HTTP_200_OK)
+async def read_messages_by_chat(
+    chat_id: int,
+    session: SessionDep,
+    message_crud: MessageCRUD = Depends(),
+) -> list[MessageOut]:
+    messages = message_crud.get_messages_by_chat(session, chat_id)
+    return messages

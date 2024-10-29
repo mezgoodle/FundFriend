@@ -86,3 +86,17 @@ def delete_document(
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
         )
     return {"message": "Document deleted successfully"}
+
+
+@router.get(
+    "/user/{user_id}",
+    response_model=list[DocumentOut],
+    status_code=status.HTTP_200_OK,
+)
+async def read_documents_by_user(
+    user_id: int,
+    session: SessionDep,
+    document_crud: DocumentCRUD = Depends(),
+) -> list[DocumentOut]:
+    documents = document_crud.get_documents_by_user(session, user_id)
+    return documents

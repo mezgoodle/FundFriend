@@ -78,3 +78,17 @@ def delete_chat(
             status_code=status.HTTP_404_NOT_FOUND, detail="Chat not found"
         )
     return {"message": "Chat deleted successfully"}
+
+
+@router.get(
+    "/user/{user_id}",
+    response_model=list[ChatOut],
+    status_code=status.HTTP_200_OK,
+)
+async def read_user_chats(
+    user_id: int,
+    session: SessionDep,
+    chat_crud: ChatCRUD = Depends(),
+) -> list[ChatOut]:
+    chats = chat_crud.get_chats_by_user(session, user_id)
+    return chats
