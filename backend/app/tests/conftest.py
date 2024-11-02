@@ -66,9 +66,11 @@ def test_chat(session: Session, test_user: user_schema.User):
     chat_data = chat_schema.ChatCreate(
         title="Test Chat",
         description="Test Chat Description",
+    )
+    chat = chat_schema.Chat(
+        **chat_data.model_dump(),
         owner_id=test_user.id,
     )
-    chat = chat_schema.Chat(**chat_data.model_dump())
     session.add(chat)
     session.commit()
     session.refresh(chat)
