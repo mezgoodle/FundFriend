@@ -75,3 +75,14 @@ def test_delete_user(test_user, session: Session, client: TestClient):
     assert response.status_code == 200
 
     assert user_in_db is None
+
+
+def test_read_users_me(test_user, client: TestClient):
+    user_id = test_user.id
+
+    response = client.get("/users/me")
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["id"] == user_id

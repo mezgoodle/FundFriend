@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
-from ..dependencies import get_session
+from ..dependencies import get_current_active_user, get_session
 from ..main import app
 from ..schemas import chat as chat_schema
 from ..schemas import document as document_schema
@@ -28,11 +28,17 @@ def session_fixture():
 
 
 @pytest.fixture(name="client")
-def client_fixture(session: Session):
+def client_fixture(session: Session, test_user: user_schema.User):
     def get_session_override():
         return session
 
+    def get_current_active_user_override():
+        return test_user
+
     app.dependency_overrides[get_session] = get_session_override
+    app.dependency_overrides[get_current_active_user] = (
+        get_current_active_user_override
+    )
     client = TestClient(app)
     yield client
     app.dependency_overrides.clear()
