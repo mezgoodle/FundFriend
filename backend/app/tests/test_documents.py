@@ -55,4 +55,4 @@ def test_read_documents_by_user(client, test_user, test_document):
     assert len(response.json()) > 0
     document = response.json()[0]
     assert document["id"] == test_document.id
-    assert document["owner_id"] == test_document.name
+    assert document["owner_id"] == test_document.owner_id
