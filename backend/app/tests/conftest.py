@@ -82,9 +82,11 @@ def test_document(session: Session, test_user: user_schema.User):
     document_data = document_schema.DocumentCreate(
         name="Test Document",
         bucket_url="https://example.com/test.pdf",
+    )
+    document = document_schema.Document(
+        **document_data.model_dump(),
         owner_id=test_user.id,
     )
-    document = document_schema.Document(**document_data.model_dump())
     session.add(document)
     session.commit()
     session.refresh(document)
@@ -96,11 +98,13 @@ def test_message(
     session: Session, test_user: user_schema.User, test_chat: chat_schema.Chat
 ):
     message_data = message_schema.MessageCreate(
-        owner_id=test_user.id,
         chat_id=test_chat.id,
         text="Hello, World!",
     )
-    message = message_schema.Message(**message_data.model_dump())
+    message = message_schema.Message(
+        **message_data.model_dump(),
+        owner_id=test_user.id,
+    )
     session.add(message)
     session.commit()
     session.refresh(message)

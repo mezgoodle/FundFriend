@@ -19,7 +19,6 @@ def test_create_document(client, test_user):
     document_data = {
         "name": "New Document",
         "bucket_url": "https://example.com/test.pdf",
-        "owner_id": test_user.id,
     }
     response = client.post("/documents/", json=document_data)
     data = response.json()
@@ -48,3 +47,12 @@ def test_delete_document(test_document, session: Session, client: TestClient):
     response = client.delete(f"/documents/{document_id}")
     assert response.status_code == 204
     assert session.get(Document, document_id) is None
+
+
+def test_read_documents_by_user(client, test_user, test_document):
+    response = client.get(f"/documents/user/{test_user.id}")
+    assert response.status_code == 200
+    assert len(response.json()) > 0
+    document = response.json()[0]
+    assert document["id"] == test_document.id
+    assert document["owner_id"] == test_document.name
