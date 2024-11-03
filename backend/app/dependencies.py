@@ -1,13 +1,18 @@
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jwt.exceptions import InvalidTokenError
 from sqlmodel import Session
 
 from .crud.chat import ChatCRUD
 from .crud.document import DocumentCRUD
 from .crud.message import MessageCRUD
 from .crud.user import UserCRUD
-from .database import engine
+from .schemas.user import User
+from .settings import Settings, settings
+from .utils.database import engine
+from .utils.passwords import PasswordUtils
 
 
 def get_session():
@@ -15,7 +20,18 @@ def get_session():
         yield session
 
 
+def get_password_utils() -> PasswordUtils:
+    return PasswordUtils(settings)
+
+
+def get_settings() -> Settings:
+    return settings
+
+
 SessionDep = Annotated[Session, Depends(get_session)]
+PasswordUtilsDep = Annotated[PasswordUtils, Depends(get_password_utils)]
+SettingsDep = Annotated[Settings, Depends(get_settings)]
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login/")
 
 
 def get_user_crud() -> UserCRUD:
@@ -32,3 +48,33 @@ def get_message_crud() -> MessageCRUD:
 
 def get_document_crud() -> DocumentCRUD:
     return DocumentCRUD()
+
+
+async def get_current_user(
+    session: SessionDep,
+    password_utils: PasswordUtilsDep,
+    token: Annotated[str, Depends(oauth2_scheme)],
+    user_crud: Annotated[UserCRUD, Depends(get_user_crud)],
+):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        token_data = password_utils.decode_token(token)
+    except InvalidTokenError as e:
+        print(e)
+        raise credentials_exception
+    user = user_crud.get_user_by_email(session, token_data.email)
+    if user is None:
+        raise credentials_exception
+    return user
+
+
+async def get_current_active_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+):
+    if not current_user.is_active:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user

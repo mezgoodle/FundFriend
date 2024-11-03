@@ -14,7 +14,7 @@ def test_read_chat(client, chat_id, expected_status_code, test_chat):
 
 
 def test_create_chat(client, test_user):
-    chat_data = {"title": "New Chat", "owner_id": test_user.id}
+    chat_data = {"title": "New Chat"}
     response = client.post("/chats/", json=chat_data)
     data = response.json()
 
@@ -43,3 +43,10 @@ def test_delete_chat(test_chat, session: Session, client: TestClient):
 
     assert response.status_code == 200
     assert chat_in_db is None
+
+
+def test_read_user_chats(client, test_user, test_chat):
+    response = client.get(f"/chats/user/{test_user.id}")
+    assert response.status_code == 200
+    assert len(response.json()) > 0
+    assert response.json()[0]["id"] == test_chat.id

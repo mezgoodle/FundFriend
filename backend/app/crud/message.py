@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from sqlmodel import Session, select
 
 from .base import CRUD
@@ -8,10 +9,16 @@ class MessageCRUD(CRUD):
     def __init__(self):
         super().__init__(Model.Message.value)
 
-    def get_message_by_user(self, session: Session, user_id: int):
+    def get_messages_by_user(self, session: Session, user_id: int):
         statement = select(self.model).where(self.model.owner_id == user_id)
         return session.exec(statement).all()
 
     def get_messages_by_chat(self, session: Session, chat_id: int):
         statement = select(self.model).where(self.model.chat_id == chat_id)
         return session.exec(statement).all()
+
+    def create(self, session: Session, obj_in: BaseModel, user_id: int):
+        chat_id = obj_in.chat_id
+        if not session.get(Model.Chat.value, chat_id):
+            return None
+        return super().create(session, obj_in, {"owner_id": user_id})
