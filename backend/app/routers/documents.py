@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
 from ..crud.document import DocumentCRUD
 from ..dependencies import (
@@ -22,11 +22,16 @@ router = APIRouter(
     "/", response_model=DocumentOut, status_code=status.HTTP_201_CREATED
 )
 def create_document(
-    document: DocumentCreate,
     session: SessionDep,
     current_user: Annotated[UserOut, Depends(get_current_active_user)],
     document_crud: DocumentCRUD = Depends(),
+    file: UploadFile = File(...),
 ):
+    document = DocumentCreate(
+        name=file.filename,
+        bucket_url=f"/documents/{file.filename}",
+        content_type=file.content_type,
+    )
     return document_crud.create(session, document, current_user.id)
 
 
