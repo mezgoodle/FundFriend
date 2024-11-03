@@ -16,17 +16,15 @@ def test_read_document(
 
 
 def test_create_document(client, test_user):
-    document_data = {
-        "name": "New Document",
-        "bucket_url": "https://example.com/test.pdf",
-    }
-    response = client.post("/documents/", json=document_data)
+    file_content = b"Test file content"
+    files = {"file": ("test.pdf", file_content, "application/pdf")}
+    response = client.post("/documents/", files=files)
     data = response.json()
 
     assert response.status_code == 201
-    assert data["name"] == "New Document"
+    assert data["name"] == "test.pdf"
     assert data["owner_id"] == test_user.id
-    assert data["bucket_url"] == "https://example.com/test.pdf"
+    assert data["bucket_url"] == "/documents/test.pdf"
     assert "id" in data
 
 
