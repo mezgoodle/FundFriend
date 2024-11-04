@@ -38,6 +38,9 @@ async def log_middleware(request: Request, call_next):
         "response_status_code": response.status_code,
     }
 
-    logger.info(json.dumps(log_dict, indent=2))
+    if response.status_code >= 400:
+        logger.error(json.dumps(log_dict, indent=2))
+    else:
+        logger.info(json.dumps(log_dict, indent=2))
 
     return response
