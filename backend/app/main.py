@@ -4,7 +4,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
+from .middlewares.logging import log_middleware
 from .routers import chats, documents, messages, users
 from .utils.database import create_db_and_tables
 
@@ -33,32 +35,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-logger = logging.getLogger()
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.StreamHandler()],
-)
-
-
-@app.middleware("http")
-async def log_middleware(request: Request, call_next):
-    log_dict = {
-        "method": request.method,
-        "path": request.url.path,
-        "status": 0,
-        "duration": 0,
-    }
-    start_time = time.time()
-    response = await call_next(request)
-    log_dict["status"] = response.status_code
-    log_dict["duration"] = time.time() - start_time
-
-    logger.info(log_dict)
-
-    return response
+app.add_middleware(BaseHTTPMiddleware, dispatch=log_middleware)
 
 
 @app.get("/")
