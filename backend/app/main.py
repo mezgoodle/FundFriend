@@ -2,7 +2,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
+from .middlewares.logging import log_middleware
 from .routers import chats, documents, messages, users
 from .utils.database import create_db_and_tables
 
@@ -31,6 +33,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(BaseHTTPMiddleware, dispatch=log_middleware)
 
 
 @app.get("/")
