@@ -3,14 +3,14 @@ import useSWR from "swr";
 import React from "react";
 import { fetcher } from "@/api/fetcher";
 
-function Profile() {
+function Posts() {
   const { data, error, isLoading } = useSWR(
     "https://jsonplaceholder.typicode.com/users",
     fetcher
   );
 
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  if (error) return <div>Failed to load</div>;
+  if (isLoading) return <div>Loading...</div>;
 
   // render data
   return (
@@ -22,4 +22,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default Posts;
