@@ -1,7 +1,7 @@
 "use client";
 import useSWR from "swr";
 import React from "react";
-import { fetcher } from "../../api/fetcher";
+import { fetcher } from "@/api/fetcher";
 
 function Profile() {
   const { data, error, isLoading } = useSWR(

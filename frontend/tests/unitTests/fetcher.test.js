@@ -1,5 +1,5 @@
 // fetcher.test.js
-import { fetcher } from "@";
+import { fetcher } from "@/api/fetcher";
 
 global.fetch = jest.fn();
 
