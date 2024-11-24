@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 function Sidebar() {
   return (
@@ -9,12 +10,12 @@ function Sidebar() {
       </div>
       <ul>
         <li>
-          <Link href="user/documents" className="block py-2 hover:bg-gray-300">
+          <Link href="/user/documents" className="block py-2 hover:bg-gray-300">
             Документи
           </Link>
         </li>
         <li>
-          <Link href="chats" className="block py-2 hover:bg-gray-300">
+          <Link href="/user/chats" className="block py-2 hover:bg-gray-300">
             Збережені чати
           </Link>
         </li>
@@ -24,7 +25,7 @@ function Sidebar() {
           </Link>
         </li>
         <li>
-          <Link href="/profile" className="block py-2 hover:bg-gray-300">
+          <Link href="/user" className="block py-2 hover:bg-gray-300">
             Профіль
           </Link>
         </li>

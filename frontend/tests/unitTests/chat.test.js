@@ -1,4 +1,4 @@
-import ChatPage from "@/app/user/chat/page";
+import ChatPage from "@/app/user/chats/page";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 
