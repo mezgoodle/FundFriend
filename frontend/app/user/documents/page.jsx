@@ -6,20 +6,20 @@ function DocumentsPage() {
   const documents = [
     {
       id: 1,
-      name: "Документ 1",
-      type: "PDF",
+      name: "Monobank taryfies",
+      type: "pdf",
       size: "1.2 MB",
     },
     {
       id: 2,
-      name: "Документ 2",
-      type: "DOCX",
+      name: "monobank_deposits",
+      type: "docx",
       size: "2.5 MB",
     },
     {
       id: 3,
-      name: "Документ 3",
-      type: "XLSX",
+      name: "Oschadbank taryfies",
+      type: "pdf",
       size: "1.8 MB",
     },
   ];
@@ -61,6 +61,15 @@ function DocumentsPage() {
             ))}
           </tbody>
         </table>
+        <div className="flex flex-col mt-4">
+          <input type="file" accept=".pdf, .docx" />
+          <span className="text-sm text-gray-500">
+            Тільки PDF та DOC(X) формати
+          </span>
+        </div>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 rounded focus:outline-none focus:shadow-outline">
+          Завантажити
+        </button>
       </div>
     </div>
   );

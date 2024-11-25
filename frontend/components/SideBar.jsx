@@ -6,7 +6,7 @@ function Sidebar() {
   return (
     <div className="w-64 bg-gray-200 p-4 fixed top-0 left-0 h-screen z-10 shadow-2xl">
       <div className="flex items-center mb-4">
-        <span className="text-lg font-bold">Іван Іваненко</span>
+        <span className="text-lg font-bold">Maksym Zavalniuk</span>
       </div>
       <ul>
         <li>
