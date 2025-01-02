@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 
 function DocumentPage({ params }) {
   const { id } = params;
@@ -15,24 +16,26 @@ function DocumentPage({ params }) {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen" data-testid="root">
       <div className="flex-1 overflow-y-auto">
         <h2 className="text-lg font-bold mb-4">{document.name}</h2>
-        <p className="text-sm text-gray-700 mb-4">Автор: {document.author}</p>
-        <p className="text-sm text-gray-700 mb-4">Розмір: {document.size}</p>
+        <p className="text-sm text-gray-700 mb-4">Author: {document.author}</p>
+        <p className="text-sm text-gray-700 mb-4">Size: {document.size}</p>
         <p className="text-sm text-gray-700 mb-4">
-          Дата створення: {document.createdAt}
+          Created At: {document.createdAt}
         </p>
         <p className="text-sm text-gray-700 mb-4">
-          Посилання на гугл бакет:{" "}
+          Link to the Google Bucket:{" "}
           <a href={document.googleBucketUrl} target="_blank">
-            Переглянути
+            Preview
           </a>
         </p>
         {document.preview && (
-          <img
+          <Image
             src={document.preview}
-            alt="Прев'ю документа"
+            alt="Document Preview"
+            width={500}
+            height={500}
             className="w-full h-auto mb-4"
           />
         )}

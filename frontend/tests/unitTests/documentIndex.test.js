@@ -6,6 +6,6 @@ describe("Document page", () => {
   it("renders a document component", () => {
     render(<DocumentPage />);
     expect(screen.getByTestId("root")).toBeInTheDocument();
-    expect(screen.getByTestId("root")).toHaveTextContent("Your documents");
+    expect(screen.getByTestId("root")).toHaveTextContent("Your Documents");
   });
 });

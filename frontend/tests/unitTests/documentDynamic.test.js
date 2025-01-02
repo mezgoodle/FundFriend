@@ -4,8 +4,8 @@ import { render, screen } from "@testing-library/react";
 
 describe("Document dynamic page", () => {
   it("renders a document dynamic component", () => {
-    render(<DocumentDynamicPage params={{ documentId: "123" }} />);
+    render(<DocumentDynamicPage params={{ id: "123" }} />);
     expect(screen.getByTestId("root")).toBeInTheDocument();
-    expect(screen.getByTestId("root")).toHaveTextContent("123");
+    expect(screen.getByTestId("root")).toHaveTextContent("Author");
   });
 });

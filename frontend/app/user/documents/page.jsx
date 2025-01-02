@@ -25,8 +25,9 @@ function DocumentsPage() {
   ];
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen" data-testid="root">
       <div className="flex-1 overflow-y-auto">
+        <h2 className="text-lg font-bold mb-4">Your Documents</h2>
         <table className="w-full table-auto border-collapse border border-gray-400">
           <thead>
             <tr>

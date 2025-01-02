@@ -21,7 +21,7 @@ function Register() {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="name"
             >
-              Ім'я
+              Name
             </label>
             <input
               id="name"
@@ -36,7 +36,7 @@ function Register() {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="email"
             >
-              Електронна пошта
+              Email
             </label>
             <input
               id="email"
@@ -51,7 +51,7 @@ function Register() {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
             >
-              Пароль
+              Password
             </label>
             <input
               id="password"
@@ -65,10 +65,10 @@ function Register() {
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Зареєструватися
+            Register
           </button>
           <p className="text-sm text-gray-700 mt-4">
-            <Link href="/auth/login">Вже маєте обліковий запис? Ввійти</Link>
+            <Link href="/auth/login">Do you have an account? Login</Link>
           </p>
         </form>
       </div>
