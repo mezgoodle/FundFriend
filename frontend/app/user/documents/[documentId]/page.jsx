@@ -7,8 +7,8 @@ function DocumentPage({ params }) {
 
   const document = {
     id: id,
-    name: "Документ 1",
-    author: "Іван Іваненко",
+    name: "Document 1",
+    author: "John Doe",
     size: "1.2 MB",
     createdAt: "2022-01-01 12:00:00",
     googleBucketUrl: "https://example.com/document1.pdf",

@@ -20,7 +20,7 @@ function Login() {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="email"
             >
-              Електронна пошта
+              Email
             </label>
             <input
               id="email"
@@ -35,7 +35,7 @@ function Login() {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
             >
-              Пароль
+              Password
             </label>
             <input
               id="password"
@@ -49,12 +49,10 @@ function Login() {
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Ввійти
+            Sign In
           </button>
           <p className="text-sm text-gray-700 mt-4">
-            <Link href="/auth/register">
-              Не маєте облікового запису? Зареєструватися
-            </Link>
+            <Link href="/auth/register">Don't have an account? Sign up</Link>
           </p>
         </form>
       </div>

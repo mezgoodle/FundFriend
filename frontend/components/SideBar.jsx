@@ -11,27 +11,27 @@ function Sidebar() {
       <ul>
         <li>
           <Link href="/user/documents" className="block py-2 hover:bg-gray-300">
-            Документи
+            Documents
           </Link>
         </li>
         <li>
           <Link href="/user/chats" className="block py-2 hover:bg-gray-300">
-            Збережені чати
+            Saved chats
           </Link>
         </li>
         <li>
           <Link href="messenger" className="block py-2 hover:bg-gray-300">
-            Новий чат
+            New chat
           </Link>
         </li>
         <li>
           <Link href="/user" className="block py-2 hover:bg-gray-300">
-            Профіль
+            Profile
           </Link>
         </li>
         <li>
           <Link href="/logout" className="block py-2 hover:bg-gray-300">
-            Вийти
+            Logout
           </Link>
         </li>
       </ul>

@@ -31,10 +31,10 @@ function DocumentsPage() {
         <table className="w-full table-auto border-collapse border border-gray-400">
           <thead>
             <tr>
-              <th className="px-4 py-2 border border-gray-400">Назва</th>
-              <th className="px-4 py-2 border border-gray-400">Тип</th>
-              <th className="px-4 py-2 border border-gray-400">Розмір</th>
-              <th className="px-4 py-2 border border-gray-400">Посилання</th>
+              <th className="px-4 py-2 border border-gray-400">Name</th>
+              <th className="px-4 py-2 border border-gray-400">Type</th>
+              <th className="px-4 py-2 border border-gray-400">Size</th>
+              <th className="px-4 py-2 border border-gray-400">Link</th>
             </tr>
           </thead>
           <tbody>
@@ -55,7 +55,7 @@ function DocumentsPage() {
                       pathname: `/user/documents/${document.id}`,
                     }}
                   >
-                    Переглянути
+                    Preview
                   </Link>
                 </td>
               </tr>
@@ -65,11 +65,11 @@ function DocumentsPage() {
         <div className="flex flex-col mt-4">
           <input type="file" accept=".pdf, .docx" />
           <span className="text-sm text-gray-500">
-            Тільки PDF та DOC(X) формати
+            Only .pdf and .docx files are allowed
           </span>
         </div>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 rounded focus:outline-none focus:shadow-outline">
-          Завантажити
+          Upload
         </button>
       </div>
     </div>
