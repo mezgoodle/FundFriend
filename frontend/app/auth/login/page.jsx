@@ -52,7 +52,9 @@ function Login() {
             Sign In
           </button>
           <p className="text-sm text-gray-700 mt-4">
-            <Link href="/auth/register">Don't have an account? Sign up</Link>
+            <Link href="/auth/register">
+              Don&apos;t have an account? Sign up
+            </Link>
           </p>
         </form>
       </div>
