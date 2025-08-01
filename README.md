@@ -1,6 +1,6 @@
 # FundFriend
 
-[![codecov](https://codecov.io/gh/mezgoodle/FundFriend/graph/badge.svg?token=6t72TDeS24)](https://codecov.io/gh/mezgoodle/FundFriend)
+To begin with, I undertook this project as part of my master's thesis, which aimed to develop an analogue of ChatGPT for financial institutions. Therefore, the backend and frontend parts are implemented here. They are not finished, and in most places, there is just test data. So consider this a small pet project.
 
 ```mermaid
 stateDiagram-v2
